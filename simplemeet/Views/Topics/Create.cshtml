@@ -1,0 +1,71 @@
+﻿@model simplemeet.Models.Topic
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<div class="card mt-5">
+    <div class="card-body">
+        <h1>Create</h1>
+        <h4>Topic</h4>
+        <span class="text-end">
+            <a class="btn btn-secondary btn-sm" asp-controller="Home" asp-action="Index">main page</a>
+        </span>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Content" class="control-label"></label>
+                        <input asp-for="Content" class="form-control" />
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StartTime" class="control-label"></label>
+                        <input asp-for="StartTime" class="form-control" />
+                        <span asp-validation-for="StartTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EndTime" class="control-label"></label>
+                        <input asp-for="EndTime" class="form-control" />
+                        <span asp-validation-for="EndTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CreatorId" class="control-label"></label>
+                        <input asp-for="CreatorId" class="form-control" />
+                        <span asp-validation-for="CreatorId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Users" class="control-label"></label>
+                        <br />
+                        <select id="user-multiselect" asp-for="Users" name="TopicUsers" id="TopicUsers" asp-items="@ViewBag.Users" data-width="100%">
+                        </select>   
+
+                        <span asp-validation-for="Users" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Initialize the plugin: -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#user-multiselect').multiselect();
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

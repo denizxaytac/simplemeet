@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="card" style="margin-top: 15%;margin-left: 13%;margin-right: 13%;">
+    <div class="card-body">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h5>posts</h5>
+        <span class="text-end">
+        <a class="btn btn-secondary btn-sm" asp-controller="Topics" asp-action="Create"><i class="fa-solid fa-plus"></i> create new post</a>
+        </span>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-6">
+        <p>Change color of logout button</p>
+        </div>
+        <div class="col-4">
+        <p>Lee, John an 3 others</p>
+        </div>
+        <div class="col-2 text-center">
+        <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-bars"></i> go to post</button>
+        </div>
+        <hr>
+    </div>
+
+    </div>
+</div>
