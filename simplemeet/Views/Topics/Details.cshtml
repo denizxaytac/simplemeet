@@ -4,45 +4,64 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="row">
+    <div class="col-7">
+        <div class="card">
+            <div class="card-body">
+                    <a class="btn btn-secondary btn-sm text-end" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-circle-chevron-left"></i> go back to main page</a>
 
-<div>
-    <h4>Topic</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatorId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatorId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <div class="row">
+                <div class="col-10">
+                    <h1>@Model.Title</h1>
+                    <p>@Model.Creator.Name</p>
+                    <p>12 hours left</p>
+                </div>
+                <div class="col-2">
+                    <img src="@Url.Content("~/profile_images/" + Model.Creator!.ProfileImage)" class="rounded" width="100" height="100">
+                </div>
+                <div class="info">
+                    <span><i class="fa-solid fa-lock-open"></i> open date: @Model.StartTime</span>
+                    <br>
+                    <span><i class="fa-solid fa-lock"></i> closed date: @Model.EndTime</span>
+                    <a class="btn btn-danger" asp-controller="Topics" asp-action="Edit" asp-route-id="@Model.Id">edit</a>
+
+                </div>
+        
+            </div>
+            <hr>
+            <p>@Model.Content</p>
+            <div class="text-center">
+                <button type="button" class="btn btn-success"><i class="fa-regular fa-thumbs-up"></i>yes</button>
+                <button type="button" class="btn btn-danger"><i class="fa-regular fa-thumbs-down"></i> no</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                @foreach(var comment in Model.Comments)
+                {
+                <div class="card p-3">
+                    <div class="text-end">
+                        <div class="user d-flex flex-row align-items-center">
+                            <img src="image.jpeg" width="45" class="user-img rounded-circle mr-2">
+                            <span><small class="font-weight-bold text-primary">deniz aytac</small> 
+                            <br>
+                            <small class="font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat velit non in aperiam adipisci, soluta recusandae vel quae eveniet, voluptatibus rerum praesentium, veritatis facilis aliquid? Aut aliquam reiciendis accusamus praesentium reprehenderit itaque ipsa enim fugit dicta consequuntur amet similique, ab quidem cumque dolorem quo deserunt quisquam accusantium? Odit, ratione voluptates.</small></span>
+                        </div>
+                        <a class="btn btn-sm btn-light shadow-sm ml-1 mb-1 float-right" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"><small>Remove</small></a>
+
+                    <small>20 minutes ago</small>
+                    </div>
+                </div>
+                }
+                <hr>
+                <div class="mb-3 text-end">
+                    <textarea placeholder="enter your comment" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                    <button type="button" class="btn btn-primary btn-sm mt-1">share</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

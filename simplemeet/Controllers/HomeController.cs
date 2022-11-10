@@ -2,6 +2,9 @@
 using simplemeet.Data;
 using simplemeet.Models;
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace simplemeet.Controllers
 {
@@ -18,22 +21,35 @@ namespace simplemeet.Controllers
 
         public IActionResult Index()
         {
-            //if (!(User!.Identity!.IsAuthenticated))
-            //{
-            //    return RedirectToAction("Login", "Account");
-            //}
+            if (!(User!.Identity!.IsAuthenticated))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            ViewBag.Topics = _context.Topic!
+                            .Include(t => t.Users!);
+            createUserIfFirstLogin(User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value);
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        private void createUserIfFirstLogin(string Email)
+        {
+            var _profile = (_context.User!).FirstOrDefault(m => m.EmailAddress == Email)!;
+            if (_profile == null)
+            {
+
+                User NewProfile = new User();
+                NewProfile.EmailAddress = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value!;
+                NewProfile.ProfileImage = "default.png";
+                NewProfile.Name = (User.Identity!).Name!;
+                _context.Add(NewProfile);
+                _context.SaveChanges();
+            }
         }
     }
 }

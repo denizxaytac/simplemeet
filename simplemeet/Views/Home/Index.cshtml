@@ -10,18 +10,30 @@
         </span>
     </div>
     <br>
+    @foreach(var topic in ViewBag.Topics){
     <div class="row">
         <div class="col-6">
-        <p>Change color of logout button</p>
+        <p>@topic.Title</p>
         </div>
         <div class="col-4">
-        <p>Lee, John an 3 others</p>
+            @{
+                string all_users = "";
+            }
+            @if(topic.Users.Count == 0)
+            {
+                all_users = "None";
+            }
+            @foreach (var usr in topic.Users)
+            {
+                all_users += usr.Name;
+            }
+            <p>@all_users</p>
         </div>
         <div class="col-2 text-center">
-        <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-bars"></i> go to post</button>
+        <a class="btn btn-secondary btn-sm" asp-controller="Topics" asp-action="Details" asp-route-id="@topic.Id"><i class="fa-solid fa-bars"></i> go to post</a>
         </div>
         <hr>
     </div>
-
+    }
     </div>
 </div>
