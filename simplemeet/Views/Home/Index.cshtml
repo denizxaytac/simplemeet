@@ -7,6 +7,7 @@
         <h5>posts</h5>
         <span class="text-end">
         <a class="btn btn-secondary btn-sm" asp-controller="Topics" asp-action="Create"><i class="fa-solid fa-plus"></i> create new post</a>
+        <a class="btn btn-secondary btn-sm" asp-controller="Account" asp-action="Profile">visit profile</a>
         </span>
     </div>
     <br>
@@ -25,7 +26,7 @@
             }
             @foreach (var usr in topic.Users)
             {
-                all_users += usr.Name;
+                all_users += usr.Name + " ";
             }
             <p>@all_users</p>
         </div>
