@@ -29,16 +29,15 @@ namespace simplemeet
         // GET: Topics/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ViewBag.LoggedInUserEmail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             if (id == null || _context.Topic == null)
             {
                 return NotFound();
             }
-
-            //var topic = await _context.Topic
-            //    .FirstOrDefaultAsync(m => m.Id == id);
             var topic = await _context.Topic!
-            .Include(t => t.Comments!)
-            .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(t => t.Comments!)
+                .ThenInclude(c => c.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
             topic.Creator = (_context.User!).FirstOrDefault(m => m.Id == topic.CreatorId)!;
             if (topic == null)
             {

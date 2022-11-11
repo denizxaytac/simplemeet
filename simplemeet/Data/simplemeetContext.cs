@@ -13,7 +13,13 @@ namespace simplemeet.Data
             : base(options)
         {
         }
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Comment>()
+                .HasOne<User>(s => s.User)
+                .WithMany(g => g.Comments)
+                .HasForeignKey(s => s.UserId);
+        }
         public DbSet<simplemeet.Models.Topic> Topic { get; set; } = default!;
 
         public DbSet<simplemeet.Models.Comment> Comment { get; set; }

@@ -40,27 +40,32 @@
     <div class="col-5">
         <div class="card">
             <div class="card-body">
-                @foreach(var comment in Model.Comments)
+                @foreach(var comment in @Model.Comments)
                 {
                 <div class="card p-3">
                     <div class="text-end">
                         <div class="user d-flex flex-row align-items-center">
-                            <img src="image.jpeg" width="45" class="user-img rounded-circle mr-2">
+                            <img src="@Url.Content("~/profile_images/" + @comment.User!.ProfileImage)" width="45" class="user-img rounded-circle mr-2">
                             <span><small class="font-weight-bold text-primary">deniz aytac</small> 
                             <br>
-                            <small class="font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat velit non in aperiam adipisci, soluta recusandae vel quae eveniet, voluptatibus rerum praesentium, veritatis facilis aliquid? Aut aliquam reiciendis accusamus praesentium reprehenderit itaque ipsa enim fugit dicta consequuntur amet similique, ab quidem cumque dolorem quo deserunt quisquam accusantium? Odit, ratione voluptates.</small></span>
+                            <small class="font-weight-bold">@comment.Content</small></span>
                         </div>
-                        <a class="btn btn-sm btn-light shadow-sm ml-1 mb-1 float-right" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"><small>Remove</small></a>
+                        @if(ViewBag.LoggedInUserEmail == comment.User.EmailAddress)
+                        {
+                            <a class="btn btn-sm btn-light shadow-sm ml-1 mb-1 float-right" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"><small>Remove</small></a>
+                        }
 
                     <small>20 minutes ago</small>
                     </div>
                 </div>
                 }
                 <hr>
-                <div class="mb-3 text-end">
-                    <textarea placeholder="enter your comment" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
-                    <button type="button" class="btn btn-primary btn-sm mt-1">share</button>
-                </div>
+                <form method="POST">
+                    <div class="form-group">
+                       <textarea name="Text" class="form-control" id="Text" rows="3"></textarea>
+                    </div>
+                    <button asp-controller="Comments" asp-action="Post" asp-route-id="@Model.Id" type="submit" class="btn btn-sm btn-primary float-right">Post comment <i class="fa-solid fa-share"></i></button>
+                </form>
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,72 +19,24 @@ namespace simplemeet
         {
             _context = context;
         }
-
-        // GET: Comments
-        public async Task<IActionResult> Index()
-        {
-            var simplemeetContext = _context.Comment.Include(c => c.Topic);
-            return View(await simplemeetContext.ToListAsync());
-        }
-
-        // GET: Comments/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Comment == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comment
-                .Include(c => c.Topic)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
-        }
-
-        // GET: Comments/Create
-        public IActionResult Create()
-        {
-            ViewData["TopicId"] = new SelectList(_context.Topic, "Id", "Id");
-            return View();
-        }
-
-        // POST: Comments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,CommentDate,TopicId,UserId")] Comment comment)
+        public async Task<IActionResult> Post([Bind("Text")] Comment comment, int id, string Text)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(comment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["TopicId"] = new SelectList(_context.Topic, "Id", "Id", comment.TopicId);
-            return View(comment);
-        }
+            var commentText = HttpContext.Request.Form["Text"];
+            comment.Content = commentText;
+            comment.TopicId = id;
+            var realTopic = _context.Topic!.Find(id);
 
-        // GET: Comments/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Comment == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comment.FindAsync(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            ViewData["TopicId"] = new SelectList(_context.Topic, "Id", "Id", comment.TopicId);
-            return View(comment);
+            var useremail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            var user = (_context.User!).First(u => u.EmailAddress == useremail);
+            comment.UserId = user.Id;
+            _context.Add(comment);
+            _context.SaveChanges();
+            (realTopic!).Comments!.Add(comment);
+            _context.Update(realTopic);
+            _context.SaveChanges();
+            TempData["success"] = "Comment was posted!";
+            return RedirectToAction("Details", "Topics", new { id = id });
         }
 
         // POST: Comments/Edit/5
@@ -121,44 +74,26 @@ namespace simplemeet
             ViewData["TopicId"] = new SelectList(_context.Topic, "Id", "Id", comment.TopicId);
             return View(comment);
         }
-
-        // GET: Comments/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null || _context.Comment == null)
+            var comment = (_context.Comment!).FirstOrDefault(m => m.Id == id);
+            var commentUser = (_context.User!).FirstOrDefault(m => m.Id == comment!.UserId);
+            var commentIssue = (_context.Topic!).Include(c => c.Comments).FirstOrDefault(m => m.Id == comment!.TopicId);
+
+            // Check if the owner of the comment is the same as the current login
+            var LoggerEmail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            if (commentUser!.EmailAddress != LoggerEmail)
             {
                 return NotFound();
             }
-
-            var comment = await _context.Comment
-                .Include(c => c.Topic)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
+            commentIssue!.Comments!.Remove(comment!);
+            _context!.Comment!.Remove(comment!);
+            _context.Update(comment!);
+            _context!.Update(commentIssue);
+            _context.SaveChanges();
+            return RedirectToAction("Details", "Topics", new { id = commentIssue.Id });
         }
 
-        // POST: Comments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Comment == null)
-            {
-                return Problem("Entity set 'simplemeetContext.Comment'  is null.");
-            }
-            var comment = await _context.Comment.FindAsync(id);
-            if (comment != null)
-            {
-                _context.Comment.Remove(comment);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool CommentExists(int id)
         {

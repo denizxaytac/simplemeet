@@ -10,16 +10,12 @@ namespace simplemeet.Models
         public string? Content { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime CommentDate { get; set; } = DateTime.Now;
-
         [Required]
-        public Topic? Topic { get; set; }
         public int TopicId { get; set; }
-
+        public Topic Topic { get; set; }
         [NotMapped]
         [Required]
-        public User? User { get; set; }
         public int UserId { get; set; }
-
-
+        public User User { get; set; }
     }
 }
