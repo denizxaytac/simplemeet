@@ -77,6 +77,7 @@ namespace simplemeet
             }
             _context.Add(topic);
             await _context.SaveChangesAsync();
+            TempData["success"] = "topic created!";
             return RedirectToAction("Details", "Topics", topic);
 
             //return RedirectToAction(nameof(Index));
@@ -172,32 +173,11 @@ namespace simplemeet
                     throw;
                 }
             }
+            TempData["success"] = "changes saved!";
             return RedirectToAction("Details", "Topics", db_topic);
             
         }
-
-        // GET: Topics/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Topic == null)
-            {
-                return NotFound();
-            }
-
-            var topic = await _context.Topic
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            return View(topic);
-        }
-
-        // POST: Topics/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (_context.Topic == null)
             {
@@ -208,9 +188,9 @@ namespace simplemeet
             {
                 _context.Topic.Remove(topic);
             }
-            
+            TempData["success"] = "topic deleted!";
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         private bool TopicExists(int id)

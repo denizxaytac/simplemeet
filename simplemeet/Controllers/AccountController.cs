@@ -60,7 +60,7 @@ public class AccountController : Controller
                     await userprofile.ImageFile.CopyToAsync(fileStream);
                 }
             }
-
+            TempData["success"] = "changes saved successfully!";
             _context.Update(userprofile);
             await _context.SaveChangesAsync();
         }

@@ -1,13 +1,19 @@
 ﻿@model simplemeet.Models.User
 
+@{
+    ViewData["Title"] = "edit profile";
+}
 
-
-<div class="row justify-content-center">
+<partial name="_toastr" />
+<div class="row justify-content-center mt-5">
     <div class="col-xl-8 col-lg-7">
         <div class="card shadow mb-4">
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">My Profile</h6>
+                <div class="text-end">
+                     <a class="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-circle-chevron-left"></i> go back to main page</a>
+                 </div>
 
             </div>
             <div class="card-body">
@@ -38,6 +44,7 @@
                             <input asp-for="ImageFile" accept="image/*" />
                             <span asp-validation-for="ImageFile" class="text-danger"></span>
                         </div>
+                        <hr />
                         <div class="form-group">
                             <input type="submit" value="Save" class="btn btn-sm btn-primary" />
                         </div>

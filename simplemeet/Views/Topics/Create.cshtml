@@ -1,19 +1,19 @@
 ﻿@model simplemeet.Models.Topic
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "create topic";
 }
 
 
+<partial name="_toastr" />
 <div class="card mt-5">
     <div class="card-body">
-        <h1>Create</h1>
-        <h4>Topic</h4>
-        <span class="text-end">
-            <a class="btn btn-secondary btn-sm" asp-controller="Home" asp-action="Index">main page</a>
-        </span>
+        <div class="text-end">
+        <a class="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-circle-chevron-left"></i> go back to main page</a>
+        </div>
+        <h2>create a topic</h2>
         <hr />
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-md-4">
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -49,8 +49,8 @@
 
                         <span asp-validation-for="Users" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
+                    <div class="form-group text-end mt-1">
+                        <input type="submit" value="create" class="btn btn-primary" />
                     </div>
                 </form>
             </div>

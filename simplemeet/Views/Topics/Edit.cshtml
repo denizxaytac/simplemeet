@@ -5,13 +5,14 @@
 }
 
 
+<partial name="_toastr" />
 <div class="card mt-5">
     <div class="card-body">
-        <span class="text-end">
-            <a class="btn btn-danger" asp-controller="Topics" asp-action="Details" asp-route-id="@Model.Id">go back</a>
-        </span>
+        <div class="text-end">
+            <a class="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-circle-chevron-left"></i> go back to main page</a>
+        </div>
         <hr />
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-md-4">
                 <form asp-action="Edit">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -52,7 +53,7 @@
 
                         <span asp-validation-for="Users" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group text-end">
                         <input type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </form>

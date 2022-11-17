@@ -35,7 +35,7 @@ namespace simplemeet
             (realTopic!).Comments!.Add(comment);
             _context.Update(realTopic);
             _context.SaveChanges();
-            TempData["success"] = "Comment was posted!";
+            TempData["success"] = "comment posted!";
             return RedirectToAction("Details", "Topics", new { id = id });
         }
 
@@ -91,6 +91,7 @@ namespace simplemeet
             _context.Update(comment!);
             _context!.Update(commentIssue);
             _context.SaveChanges();
+            TempData["success"] = "comment deleted!";
             return RedirectToAction("Details", "Topics", new { id = commentIssue.Id });
         }
 

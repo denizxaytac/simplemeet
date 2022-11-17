@@ -13,7 +13,6 @@ namespace simplemeet.Models
         [Required]
         public int TopicId { get; set; }
         public Topic Topic { get; set; }
-        [NotMapped]
         [Required]
         public int UserId { get; set; }
         public User User { get; set; }

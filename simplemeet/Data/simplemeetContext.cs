@@ -15,10 +15,15 @@ namespace simplemeet.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // one comment have one user, one user can have multiple comments
             modelBuilder.Entity<Comment>()
                 .HasOne<User>(s => s.User)
                 .WithMany(g => g.Comments)
                 .HasForeignKey(s => s.UserId);
+            modelBuilder.Entity<Topic>()
+                .HasOne<User>(s => s.Creator)
+                .WithMany(g => g.CreatedTopics)
+                .HasForeignKey(s => s.CreatorId);
         }
         public DbSet<simplemeet.Models.Topic> Topic { get; set; } = default!;
 

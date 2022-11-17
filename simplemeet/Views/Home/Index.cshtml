@@ -1,22 +1,23 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "simplemeet";
 }
+<partial name="_toastr" />
 <div class="card" style="margin-top: 15%;margin-left: 13%;margin-right: 13%;">
     <div class="card-body">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h5>posts</h5>
+        <a class="btn btn-secondary btn" asp-controller="Topics" asp-action="Create"><i class="fa-solid fa-plus"></i> create new post</a>
         <span class="text-end">
-        <a class="btn btn-secondary btn-sm" asp-controller="Topics" asp-action="Create"><i class="fa-solid fa-plus"></i> create new post</a>
-        <a class="btn btn-secondary btn-sm" asp-controller="Account" asp-action="Profile">visit profile</a>
+        <a class="btn btn-warning btn-sm" asp-controller="Account" asp-action="Profile">visit profile</a>
         </span>
     </div>
     <br>
     @foreach(var topic in ViewBag.Topics){
     <div class="row">
-        <div class="col-6">
+        <div class="col-4">
         <p>@topic.Title</p>
         </div>
-        <div class="col-4">
+        <div class="col-6">
             @{
                 string all_users = "";
             }
@@ -26,7 +27,7 @@
             }
             @foreach (var usr in topic.Users)
             {
-                all_users += usr.Name + " ";
+                all_users += usr.Name + ", ";
             }
             <p>@all_users</p>
         </div>

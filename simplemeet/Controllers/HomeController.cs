@@ -25,9 +25,10 @@ namespace simplemeet.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            ViewBag.Topics = _context.Topic!
-                            .Include(t => t.Users!);
             createUserIfFirstLogin(User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value);
+            ViewBag.Topics = _context.Topic!
+                            .Include(t => t.Users!)
+                            .Include(t => t.Creator);
             return View();
         }
 

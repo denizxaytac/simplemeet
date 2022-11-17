@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using simplemeet.Data;
 
@@ -11,9 +12,10 @@ using simplemeet.Data;
 namespace simplemeet.Migrations
 {
     [DbContext(typeof(simplemeetContext))]
-    partial class simplemeetContextModelSnapshot : ModelSnapshot
+    [Migration("20221117153041_Added vote class")]
+    partial class Addedvoteclass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

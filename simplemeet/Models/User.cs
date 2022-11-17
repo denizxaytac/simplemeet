@@ -9,6 +9,7 @@ namespace simplemeet.Models
         public User()
         {
             this.Topics = new HashSet<Topic>();
+            this.CreatedTopics = new HashSet<Topic>();
             this.Comments = new HashSet<Comment>();
         }
         public int Id { get; set; }
@@ -22,6 +23,7 @@ namespace simplemeet.Models
         [DisplayName("Upload Profile Image")]
         public IFormFile? ImageFile { get; set; }
         public virtual ICollection<Topic> Topics { get; set; }
+        public virtual ICollection<Topic> CreatedTopics { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
     }
 }
