@@ -29,12 +29,16 @@ namespace simplemeet
         // GET: Topics/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            ViewBag.LoggedInUserEmail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            var user_email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            var logged_user_id = (_context.User!).FirstOrDefault(m => m.EmailAddress == user_email)!.Id;
+            ViewBag.LoggedInUserEmail = user_email;
             if (id == null || _context.Topic == null)
             {
                 return NotFound();
             }
             var topic = await _context.Topic!
+                .Include(t => t.Users!)
+                .Include(t => t.Votes)
                 .Include(t => t.Comments!)
                 .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -43,6 +47,41 @@ namespace simplemeet
             {
                 return NotFound();
             }
+            ViewBag.TopicUsers = topic.Users;
+            // gets votes
+            var topic_votes = _context.Vote!.Where(v => v.TopicId == topic.Id);
+            ViewBag.TopicVotes = topic_votes;
+            int yes_votes = 0;
+            int no_votes = 0;
+            bool votes_visible = false;
+            foreach (var vote in topic_votes)
+            {
+                // only makes votes visible if the user already votes
+                if (vote.UserId == logged_user_id)
+                {
+                    votes_visible = true;
+                }
+                if (vote.Choice == true)
+                {
+                    yes_votes += 1;
+                }
+                else
+                {
+                    no_votes += 1;
+                }
+            }
+            if (!votes_visible)
+            {
+                ViewBag.votes_no = "";
+                ViewBag.votes_yes = "";
+            }
+            else
+            {
+                ViewBag.votes_no = no_votes;
+                ViewBag.votes_yes = yes_votes;
+            }
+            //
+
 
             return View(topic);
         }
@@ -88,12 +127,24 @@ namespace simplemeet
         // GET: Topics/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
+
+
             if (id == null || _context.Topic == null)
             {
                 return NotFound();
             }
 
             var topic = await _context.Topic.FindAsync(id);
+
+            var user_email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            int logged_in_id = (_context.User!).FirstOrDefault(m => m.EmailAddress == user_email)!.Id;
+
+            if (topic.CreatorId != logged_in_id)
+            {
+                TempData["warning"] = "you're not allowed to edit this topic!";
+                return RedirectToAction("Details", "Topics", topic);
+            }
 
             List<User> SelectedUsers = new List<User>();
             List<User> UnSelectedUsers = new List<User>();
@@ -135,12 +186,16 @@ namespace simplemeet
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,StartTime,EndTime,CreatorId")] Topic topic)
         {
-           
+
+
             var db_topic = _context.Topic!.Include(u => u.Users).First(p => p.Id == topic.Id);
             db_topic.Title = topic.Title;
             db_topic.Content = topic.Content;
             db_topic.StartTime = topic.StartTime;
             db_topic.EndTime = topic.EndTime;
+
+
+
 
             foreach (var usr in db_topic.Users!)
             {
@@ -179,11 +234,21 @@ namespace simplemeet
         }
         public async Task<IActionResult> Delete(int id)
         {
+
+
             if (_context.Topic == null)
             {
                 return Problem("Entity set 'simplemeetContext.Topic'  is null.");
             }
             var topic = await _context.Topic.FindAsync(id);
+
+            var user_email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            int logged_in_id = (_context.User!).FirstOrDefault(m => m.EmailAddress == user_email)!.Id;
+            if (topic.CreatorId != logged_in_id)
+            {
+                TempData["warning"] = "you're not allowed to delete this topic!";
+                return RedirectToAction("Details", "Topics", topic);
+            }
             if (topic != null)
             {
                 _context.Topic.Remove(topic);

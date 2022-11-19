@@ -6,7 +6,7 @@
     <div class="card-body">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h5>posts</h5>
-        <a class="btn btn-secondary btn" asp-controller="Topics" asp-action="Create"><i class="fa-solid fa-plus"></i> create new post</a>
+        <a class="btn btn-secondary btn" asp-controller="Topics" asp-action="Create"><i class="fa-solid fa-plus"></i> create a new topic</a>
         <span class="text-end">
         <a class="btn btn-warning btn-sm" asp-controller="Account" asp-action="Profile">visit profile</a>
         </span>
@@ -15,21 +15,10 @@
     @foreach(var topic in ViewBag.Topics){
     <div class="row">
         <div class="col-4">
-        <p>@topic.Title</p>
+        <p>@topic.Title | @topic.Creator.Name</p>
         </div>
         <div class="col-6">
-            @{
-                string all_users = "";
-            }
-            @if(topic.Users.Count == 0)
-            {
-                all_users = "None";
-            }
-            @foreach (var usr in topic.Users)
-            {
-                all_users += usr.Name + ", ";
-            }
-            <p>@all_users</p>
+            <p>@getUsers(topic.Users, @topic.Creator.Name)</p>
         </div>
         <div class="col-2 text-center">
         <a class="btn btn-secondary btn-sm" asp-controller="Topics" asp-action="Details" asp-route-id="@topic.Id"><i class="fa-solid fa-bars"></i> go to post</a>
@@ -39,3 +28,42 @@
     }
     </div>
 </div>
+
+@functions{
+
+    public static String getUsers(IEnumerable<User> users, string creator_name)
+    {
+        if (users.Count() == 0)
+        {
+            return "None";
+        }
+        else if (users.Count() == 1)
+        {
+            return users.ElementAt(0).Name;
+        }
+        else
+        {
+            string user_string = "";
+            int idx = 0;
+            foreach(var user in users)
+            {
+                if (idx == users.Count() - 1){
+                    user_string += user.Name;
+                }
+                else if (idx >= 3)
+                {
+                    int total_minus_three = users.Count() - 3;
+                    user_string += "and " + total_minus_three +  " more";
+                }
+                else
+                {
+                    if (user.Name != creator_name){
+                        user_string += user.Name + ", ";
+                    }
+                }
+                idx += 1;
+            }
+            return user_string;
+        }
+    }
+}

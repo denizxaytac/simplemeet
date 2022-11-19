@@ -21,14 +21,17 @@ namespace simplemeet.Data
                 .WithMany(g => g.Comments)
                 .HasForeignKey(s => s.UserId);
             modelBuilder.Entity<Topic>()
-                .HasOne<User>(s => s.Creator)
-                .WithMany(g => g.CreatedTopics)
-                .HasForeignKey(s => s.CreatorId);
+               .HasOne<User>(s => s.Creator)
+               .WithMany(g => g.CreatedTopics)
+               .HasForeignKey(s => s.CreatorId)
+               .OnDelete(DeleteBehavior.ClientNoAction);
         }
         public DbSet<simplemeet.Models.Topic> Topic { get; set; } = default!;
 
         public DbSet<simplemeet.Models.Comment> Comment { get; set; }
 
         public DbSet<simplemeet.Models.User> User { get; set; }
+
+        public DbSet<simplemeet.Models.Vote> Vote { get; set; }
     }
 }

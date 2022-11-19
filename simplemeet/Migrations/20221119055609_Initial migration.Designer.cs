@@ -12,8 +12,8 @@ using simplemeet.Data;
 namespace simplemeet.Migrations
 {
     [DbContext(typeof(simplemeetContext))]
-    [Migration("20221109180627_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20221119055609_Initial migration")]
+    partial class Initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -79,6 +79,8 @@ namespace simplemeet.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatorId");
+
                     b.ToTable("Topic");
                 });
 
@@ -107,6 +109,36 @@ namespace simplemeet.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("simplemeet.Models.Vote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("Choice")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Topic")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("User")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("Vote");
+                });
+
             modelBuilder.Entity("TopicUser", b =>
                 {
                     b.Property<int>("TopicsId")
@@ -130,13 +162,35 @@ namespace simplemeet.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("simplemeet.Models.User", null)
+                    b.HasOne("simplemeet.Models.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Topic");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("simplemeet.Models.Topic", b =>
+                {
+                    b.HasOne("simplemeet.Models.User", "Creator")
+                        .WithMany("CreatedTopics")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("simplemeet.Models.Vote", b =>
+                {
+                    b.HasOne("simplemeet.Models.Topic", null)
+                        .WithMany("Votes")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TopicUser", b =>
@@ -157,11 +211,15 @@ namespace simplemeet.Migrations
             modelBuilder.Entity("simplemeet.Models.Topic", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("simplemeet.Models.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("CreatedTopics");
                 });
 #pragma warning restore 612, 618
         }

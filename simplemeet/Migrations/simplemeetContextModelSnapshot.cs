@@ -176,7 +176,7 @@ namespace simplemeet.Migrations
                     b.HasOne("simplemeet.Models.User", "Creator")
                         .WithMany("CreatedTopics")
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.Navigation("Creator");

@@ -44,7 +44,7 @@
                     <div class="form-group">
                         <label asp-for="Users" class="control-label"></label>
                         <br />
-                        <select id="user-multiselect" asp-for="Users" name="TopicUsers" id="TopicUsers" asp-items="@ViewBag.Users" data-width="100%">
+                        <select asp-for="Users" name="TopicUsers" id="TopicUsers" asp-items="@ViewBag.Users" data-width="100%">
                         </select>   
 
                         <span asp-validation-for="Users" class="text-danger"></span>
@@ -58,11 +58,8 @@
     </div>
 </div>
 
-<!-- Initialize the plugin: -->
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#user-multiselect').multiselect();
-    });
+<script>
+    $('#TopicUsers').selectpicker();
 </script>
 
 @section Scripts {

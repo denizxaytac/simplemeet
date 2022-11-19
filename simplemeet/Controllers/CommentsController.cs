@@ -23,6 +23,11 @@ namespace simplemeet
         public async Task<IActionResult> Post([Bind("Text")] Comment comment, int id, string Text)
         {
             var commentText = HttpContext.Request.Form["Text"];
+            if (commentText == ""){
+                TempData["warning"] = "comment cant be empty";
+                return RedirectToAction("Details", "Topics", new { id = id });
+
+            }
             comment.Content = commentText;
             comment.TopicId = id;
             var realTopic = _context.Topic!.Find(id);

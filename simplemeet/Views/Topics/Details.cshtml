@@ -1,10 +1,11 @@
 ﻿@model simplemeet.Models.Topic
 
 @{
-    ViewData["Title"] = @Model.Title + "- details";
+    ViewData["Title"] = @Model.Title + " - details";
 }
 
 <partial name="_toastr" />
+<partial name="_modals"/>
 <div class="row mt-5">
     <div class="col-7">
         <div class="card">
@@ -14,20 +15,30 @@
                 </div>
             <div class="row mt-1">
                 <div class="col-10">
-                    <h1>@Model.Title</h1> 
+                    <h1>@Model.Title</h1>
                     <p>@Model.Creator.Name</p>
-                    <p>@getTimeLeft(Model.EndTime)</p>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#usersModal">
+                        see partipiciants
+                    </button>
+                    <p style="color: red;">@getTimeLeft(Model.EndTime)</p>
                 </div>
                 <div class="col-2 text-center">
                     <img src="@Url.Content("~/profile_images/" + Model.Creator!.ProfileImage)" class="rounded" width="100" height="100">
-                    <a class="btn btn-primary mt-1" asp-controller="Topics" asp-action="Edit" asp-route-id="@Model.Id">edit</a>
-                    <a class="btn btn-danger mt-1" asp-controller="Topics" asp-action="Delete" asp-route-id="@Model.Id">delete</a>
+                        @if(ViewBag.LoggedInUserEmail == @Model.Creator.EmailAddress)
+                        {
+                            <a class="btn btn-primary mt-1" asp-controller="Topics" asp-action="Edit" asp-route-id="@Model.Id">edit</a>
+                            <button type="button" class="btn btn-danger mt-1" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                delete
+                            </button>
+                        }
 
                 </div>
-                <div class="info">
+                <div class="info row">                   
                     <span><i class="fa-solid fa-lock-open"></i> open date: @Model.StartTime</span>
                     <br>
                     <span><i class="fa-solid fa-lock"></i> closed date: @Model.EndTime</span>
+
+
 
                 </div>
         
@@ -35,8 +46,8 @@
             <hr>
             <p>@Model.Content</p>
             <div class="text-center">
-                <button type="button" class="btn btn-success"><i class="fa-regular fa-thumbs-up"></i>yes</button>
-                <button type="button" class="btn btn-danger"><i class="fa-regular fa-thumbs-down"></i> no</button>
+                <a class="btn btn-success" asp-controller="Vote" asp-action="YesVote" asp-route-id="@Model.Id"><i class="fa-regular fa-thumbs-up"></i>yes @ViewBag.votes_yes</a>
+                <a class="btn btn-danger" asp-controller="Vote" asp-action="NoVote" asp-route-id="@Model.Id"><i class="fa-regular fa-thumbs-down"></i> no @ViewBag.votes_no</a>   
             </div>
         </div>
         </div>
@@ -78,6 +89,7 @@
         </div>
     </div>
 </div>
+
 
 @functions{
 
