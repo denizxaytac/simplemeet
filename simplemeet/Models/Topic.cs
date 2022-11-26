@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace simplemeet.Models
@@ -13,7 +14,9 @@ namespace simplemeet.Models
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Content { get; set; }
+        [DisplayName("Start date")]
         public DateTime StartTime { get; set; } = DateTime.Now;
+        [DisplayName("End date")]
         public DateTime EndTime { get; set; }
         [Required]
         public User? Creator { get; set; }

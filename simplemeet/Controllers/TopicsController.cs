@@ -47,7 +47,7 @@ namespace simplemeet
             {
                 return NotFound();
             }
-            ViewBag.TopicUsers = topic.Users;
+            ViewBag.TopicUsers = topic.Users.Append(topic.Creator);
             // gets votes
             var topic_votes = _context.Vote!.Where(v => v.TopicId == topic.Id);
             ViewBag.TopicVotes = topic_votes;

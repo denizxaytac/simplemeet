@@ -59,19 +59,19 @@
                 @foreach(var comment in @Model.Comments)
                 {
                 <div class="card p-3">
-                    <div class="text-end">
-                        <div class="user d-flex flex-row align-items-center">
+                    <div class="">
+                        <div class="user d-flex flex-row align-items-end">
                             <img src="@Url.Content("~/profile_images/" + @comment.User!.ProfileImage)" width="45" class="user-img rounded-circle mr-2">
-                            <span><small class="font-weight-bold text-primary">deniz aytac</small> 
-                            <br>
+                            <span><small class="font-weight-bold text-primary">deniz aytac </small>
+                             <small>@comment.CommentDate.ToString("dd.MM.yyyy HH:mm")</small>
+                              <br>
                             <small class="font-weight-bold">@comment.Content</small></span>
                         </div>
                         @if(ViewBag.LoggedInUserEmail == comment.User.EmailAddress)
                         {
-                            <a class="btn btn-sm btn-light shadow-sm ml-1 mb-1 float-right" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"><small>Remove</small></a>
+                            <a class="text-danger" style="text-decoration: none" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"><small>remove</small></a>
                         }
 
-                    <small>20 minutes ago</small>
                     </div>
                 </div>
                 }
